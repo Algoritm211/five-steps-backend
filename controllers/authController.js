@@ -8,6 +8,7 @@ class AuthController {
     try {
 
       const {email, password, age, name, surName} = request.body
+      console.log(email)
 
       const person = await User.findOne({email: email})
       // console.log(person)
@@ -49,7 +50,7 @@ class AuthController {
         user: {
           id: user._id,
           email: user.email,
-          status: user.status,
+          role: user.role,
           name: user.name,
           surname: user.surname,
         }
@@ -76,7 +77,7 @@ class AuthController {
         user: {
           id: user.id,
           email: user.email,
-          status: user.status,
+          role: user.role,
           name: user.name,
           surname: user.surname,
         }
