@@ -7,7 +7,7 @@ class AuthController {
   async registerUser(request, response) {
     try {
 
-      const {email, password, age, name, surName} = request.body
+      const {email, password, age, name, surName, birthdayDate} = request.body
       console.log(email)
 
       const person = await User.findOne({email: email})
@@ -18,7 +18,7 @@ class AuthController {
       }
 
       const hashPassword = await bcrypt.hash(password, 8)
-      const user = new User({email: email, password: hashPassword, name: name, surName: surName, age: age})
+      const user = new User({email: email, password: hashPassword, name: name, surName: surName || '', age: age || '', birthdayDate: birthdayDate || ''})
       await user.save()
       return response.status(200).json({message: 'User created successfully'})
 

@@ -8,8 +8,11 @@ const User = new Schema({
   name: {type: String, required: true},
   age: {type: Number},
   surName: {type: String},
+  birthdayDate: {type: String},
   dateRegistration: {type: Date, default: Date.now()},
-  role: {type: String, default: 'student'}
+  role: {type: String, default: 'student'},
+  courses: [{type: ObjectId, ref: 'Course'}],
+  lessonsCompleted: [{type: ObjectId, ref: 'Lesson'}],
 })
 
 
