@@ -44,7 +44,7 @@ class AuthController {
         return response.status(400).json({message: 'Invalid password or login'})
       }
 
-      const token = await JWT.sign({id: user._id}, process.env.secretKey, {expiresIn: '30d'})
+      const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
       return response.status(200).json({
         token: token,
         user: {
@@ -71,7 +71,7 @@ class AuthController {
         return response.status(401).json({message: 'This user was not found'})
       }
 
-      const token = JWT.sign({id: user.id}, process.env.secretKey, {expiresIn: '1h'})
+      const token = JWT.sign({id: user.id}, process.env.secretKey, {})
       return response.json({
         token: token,
         user: {
@@ -85,6 +85,30 @@ class AuthController {
 
     } catch (error) {
       response.send({message: "Server Error"})
+    }
+  }
+
+  async socialAuth(req, res) {
+    try {
+      const { authInfo, user } = req;
+      // console.log(user)
+
+      const token = JWT.sign({id: user.id}, process.env.secretKey, {})
+      return res.json({
+        token: token,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          name: user.name,
+          surname: user.surname,
+        }
+      })
+
+      return res.status(200).json({message: 'Success'})
+    } catch (error) {
+      console.log(error)
+      return res.status(200).json({message: 'Auth Failed'})
     }
   }
 }
