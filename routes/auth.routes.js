@@ -3,6 +3,7 @@ const AuthController = require('../controllers/authController')
 const authMiddleware = require("../middlewares/auth.middleware");
 const passport = require('passport')
 const {passportGoogle} = require('../passport/passport-google');
+const {passportFacebook} = require('../passport/passport-facebook')
 
 
 const router = new Router()
@@ -29,5 +30,15 @@ router.get(
   }),
   AuthController.socialAuth
 );
+
+
+//Facebook auth
+router.get('/facebook', passport.authenticate('facebook'));
+
+router.get('/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  }));
 
 module.exports = router

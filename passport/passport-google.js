@@ -1,6 +1,3 @@
-const debug = require("debug");
-const { config } = require("dotenv")
-config()
 const passport = require('passport')
 const GoogleStrategy = require("passport-google-oauth20")
 const User = require('../models/User')
@@ -13,7 +10,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: "http://localhost:5000/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       // console.log(profile)
@@ -38,15 +35,15 @@ passport.use(
           return done(null, user, { statusCode: 200 });
         }
 
-        const userObj = new User({
-          googleId: profile.id,
-          name: userName,
-          email,
-          surName: '', age: '', birthdayDate: ''
-        });
+        // const userObj = new User({
+        //   googleId: profile.id,
+        //   name: userName,
+        //   email,
+        //   surName: '', age: '', birthdayDate: ''
+        // });
 
-        const user = await userObj.save({ validateBeforeSave: false });
-        return done(null, user, { statusCode: 201 });
+        // const user = await userObj.save({ validateBeforeSave: false });
+        return done(null, {name: userName, email: email}, { statusCode: 404 });
       } catch (err) {
         done(err, false);
       }

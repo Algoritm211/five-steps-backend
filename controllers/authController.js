@@ -7,8 +7,8 @@ class AuthController {
   async registerUser(request, response) {
     try {
 
-      const {email, password, age, name, surName, birthdayDate} = request.body
-      console.log(email)
+      const {email, password, age, name, surName, birthdayDate, role} = request.body
+      console.log(role)
 
       const person = await User.findOne({email: email})
       // console.log(person)
@@ -18,7 +18,7 @@ class AuthController {
       }
 
       const hashPassword = await bcrypt.hash(password, 8)
-      const user = new User({email: email, password: hashPassword, name: name, surName: surName || '', age: age || '', birthdayDate: birthdayDate || ''})
+      const user = new User({email: email, password: hashPassword, name: name, surName: surName || '', age: age || '', birthdayDate: birthdayDate || '', role: role || 'student'})
       await user.save()
       return response.status(200).json({message: 'User created successfully'})
 
@@ -92,20 +92,28 @@ class AuthController {
     try {
       const { authInfo, user } = req;
       // console.log(user)
+      if (authInfo.statusCode === 200) {
+        const token = JWT.sign({id: user.id}, process.env.secretKey, {})
 
-      const token = JWT.sign({id: user.id}, process.env.secretKey, {})
-      return res.json({
-        token: token,
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          name: user.name,
-          surname: user.surname,
+        const userInfo = {
+          token: token,
+          user: {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            name: user.name,
+            surname: user.surname,
+          }
         }
-      })
 
-      return res.status(200).json({message: 'Success'})
+        res.send(
+          `<script>window.opener.postMessage('${JSON.stringify(userInfo,)}', '*');window.close();</script>`,
+        );
+      }
+
+      return res.send(
+        `<script>window.opener.postMessage('${JSON.stringify({...user, error: 404},)}', '*');window.close();</script>`,
+      );
     } catch (error) {
       console.log(error)
       return res.status(200).json({message: 'Auth Failed'})

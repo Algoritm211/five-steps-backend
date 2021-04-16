@@ -8,6 +8,11 @@ const authMiddleware = async (request, response, next) => {
 
   try {
     const token = request.headers.authorization.split(' ')[1]
+    if (token === 'null'|| token === 'undefined') {
+      request.user = null
+      next()
+      return
+    }
 
     const decodedUserId = await JWT.verify(token, process.env.secretKey)
     request.user = decodedUserId
