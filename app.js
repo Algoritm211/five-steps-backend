@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 
 const authRouter = require('./routes/auth.routes')
+const lessonRouter = require('./routes/lesson.routes')
+const courseRouter = require('./routes/course.routes')
 
 const PORT = process.env.PORT
 
@@ -16,6 +18,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth/', authRouter)
+app.use('/api/lesson/', lessonRouter)
+app.use('/api/course/', courseRouter)
 
 
 const START = async () => {

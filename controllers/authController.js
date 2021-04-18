@@ -8,10 +8,8 @@ class AuthController {
     try {
 
       const {email, password, age, name, surName, birthdayDate, role} = request.body
-      console.log(role)
 
       const person = await User.findOne({email: email})
-      // console.log(person)
 
       if (person) {
         return response.status(400).json({message: `This user with email ${email} already exist`})

@@ -11,7 +11,7 @@ passport.use(
   new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:5000/api/auth/facebook/callback"
+      callbackURL: "https://dff85c1d6017.ngrok.io/api/auth/facebook/callback"
     }, async (accessToken, refreshToken, profile, done) => {
       console.log(profile)
       try {
