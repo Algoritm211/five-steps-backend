@@ -23,6 +23,37 @@ class LessonController {
     }
   }
 
+  async updateLesson(req, res) {
+    try {
+      const {body, homeWork, lessonId} = req.body
+
+      const newLesson = await Lesson.findOneAndUpdate(
+        {_id: lessonId},
+        {body: body, homeWork: homeWork},
+        {new: true})
+
+      return res.status(200).json({
+        message: 'Lesson updated successfully', lesson: newLesson
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while updating lesson'})
+    }
+  }
+
+  async getLesson(req, res) {
+    try {
+      const {lessonId} = req.query
+      const lesson = await Lesson.findOne({_id: lessonId})
+      return res.status(200).json({
+        lesson: lesson
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while getting lesson'})
+    }
+  }
+
 }
 
 
