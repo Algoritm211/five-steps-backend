@@ -36,7 +36,7 @@ class AuthController {
         return response.status(400).json({message: 'User does not exist'})
       }
 
-      const isPasswordValid = bcrypt.compare(password, user.password)
+      const isPasswordValid = await bcrypt.compare(password, user.password)
 
       if (!isPasswordValid) {
         return response.status(400).json({message: 'Invalid password or login'})
@@ -46,6 +46,7 @@ class AuthController {
       return response.status(200).json({
         token: token,
         user: {
+          lessonsCompleted: user.lessonsCompleted,
           id: user._id,
           email: user.email,
           role: user.role,
@@ -73,6 +74,7 @@ class AuthController {
       return response.json({
         token: token,
         user: {
+          lessonsCompleted: user.lessonsCompleted,
           id: user.id,
           email: user.email,
           role: user.role,
