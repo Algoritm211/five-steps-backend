@@ -103,6 +103,7 @@ class AuthController {
             role: user.role,
             name: user.name,
             surname: user.surname,
+            lessonsCompleted: user.lessonsCompleted,
           }
         }
 

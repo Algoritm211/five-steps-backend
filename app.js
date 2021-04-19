@@ -3,6 +3,10 @@ const cors = require('cors');
 require('dotenv').config()
 const mongoose = require('mongoose')
 const passport = require('passport')
+const fs = require("fs");
+const fileUpload = require('express-fileupload')
+const path = require('path')
+const staticMiddleware = require('./middlewares/static.middleware')
 
 const authRouter = require('./routes/auth.routes')
 const lessonRouter = require('./routes/lesson.routes')
@@ -18,6 +22,10 @@ app.use(passport.initialize());
 app.use(cors())
 app.use(express.json())
 
+app.use('/', express.static( path.join(__dirname, 'static') ))
+app.use(fileUpload({}))
+app.use(staticMiddleware(path.resolve(__dirname, 'static')))
+
 app.use('/api/auth/', authRouter)
 app.use('/api/lesson/', lessonRouter)
 app.use('/api/course/', courseRouter)
@@ -26,6 +34,13 @@ app.use('/api/user/', userRouter)
 
 const START = async () => {
   try {
+
+    const staticPath = path.resolve(__dirname, 'static')
+
+    if (!fs.existsSync(staticPath)) {
+      fs.mkdirSync(path.resolve(staticPath))
+    }
+
     const dbURL = process.env.dbURL
     await mongoose
       .connect(dbURL, {

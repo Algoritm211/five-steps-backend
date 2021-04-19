@@ -1,5 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
+const path = require('path')
+const fs = require("fs");
 
 class UserController {
   async updateUser(req, res) {
@@ -17,6 +19,48 @@ class UserController {
     } catch (error) {
       console.log(error)
       return res.status(500).json({message: 'Error. Can not update user'})
+    }
+  }
+
+  async uploadAvatar(req, res) {
+    try {
+      const {photo} = req.files
+      const photoName = Date.now() + photo.name
+      const newPhotoPath = path.join(req.staticPath, photoName)
+
+      const user = await User.findOne({_id: req.user.id})
+      const oldPhotoPath = path.join(req.staticPath, user.avatar)
+      if (fs.existsSync(oldPhotoPath) && oldPhotoPath !== req.staticPath) {
+        fs.unlinkSync(oldPhotoPath)
+      }
+      user.avatar = photoName
+      await photo.mv(newPhotoPath)
+      await user.save()
+
+      return res.status(201).json({
+        user: user
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Fail while uploading avatar'})
+    }
+  }
+
+  async deleteAvatar(req, res) {
+    try {
+      const user = await User.findOne({_id: req.user.id})
+      const filePath = path.join(req.staticPath, user.avatar)
+      user.avatar = ''
+      user.save()
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+        return res.status(200).json({message: 'Deleting successfully', user: user})
+      }
+      return res.status(200).json({message: 'File was not found', user: user})
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while deleting avatar'})
     }
   }
 }
