@@ -5,6 +5,8 @@ const router = new Router()
 
 
 router.post('/create', authMiddleware, CourseController.createCourses)
-router.get('', CourseController.getCourses)
+router.get('', CourseController.getAllCourses)
+router.get('/one', CourseController.getCourse)
+router.get('/user', authMiddleware, CourseController.getUserCourses)
 
 module.exports = router

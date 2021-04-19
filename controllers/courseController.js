@@ -30,7 +30,7 @@ class CourseController {
     }
   }
 
-  async getCourses(req, res) {
+  async getAllCourses(req, res) {
     try {
       const courses = await Course.find({}).populate('author')
       return res.status(200).json({
@@ -42,6 +42,30 @@ class CourseController {
     }
   }
 
+  async getCourse(req, res) {
+    try {
+      const {courseId} = req.query
+      const course = await Course.findOne({_id: courseId})
+      return res.status(200).json({
+        course: course
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while getting course'})
+    }
+  }
+
+  async getUserCourses(req, res) {
+    try {
+      const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'author'}})
+
+      return res.status(200).json({courses: user.courses})
+    }
+     catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while getting user courses'})
+    }
+  }
 }
 
 
