@@ -5,11 +5,12 @@ class CourseController {
 
   async createCourses(req, res) {
     try {
-      const {title, description} = req.body
+      const {title, description, category} = req.body
 
       const course = new Course({
         author: req.user.id, // from auth.middleware
         title: title,
+        category: category,
         description: description,
         rating: 0,
       })
@@ -31,7 +32,7 @@ class CourseController {
 
   async getCourses(req, res) {
     try {
-      const courses = await Course.find({})
+      const courses = await Course.find({}).populate('author')
       return res.status(200).json({
         courses: courses
       })
@@ -40,6 +41,7 @@ class CourseController {
       return res.status(500).json({message: 'Can not get courses'})
     }
   }
+
 }
 
 

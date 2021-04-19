@@ -7,5 +7,4 @@ const router = new Router()
 router.post('/create', authMiddleware, CourseController.createCourses)
 router.get('', CourseController.getCourses)
 
-
 module.exports = router
