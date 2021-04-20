@@ -12,6 +12,7 @@ const authRouter = require('./routes/auth.routes')
 const lessonRouter = require('./routes/lesson.routes')
 const courseRouter = require('./routes/course.routes')
 const userRouter = require('./routes/user.routes')
+const articleRouter = require('./routes/article.routes')
 
 const PORT = process.env.PORT
 
@@ -30,6 +31,7 @@ app.use('/api/auth/', authRouter)
 app.use('/api/lesson/', lessonRouter)
 app.use('/api/course/', courseRouter)
 app.use('/api/user/', userRouter)
+app.use('/api/article/', articleRouter)
 
 
 const START = async () => {
