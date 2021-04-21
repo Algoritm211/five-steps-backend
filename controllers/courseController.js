@@ -32,10 +32,27 @@ class CourseController {
 
   async getAllCourses(req, res) {
     try {
-      const courses = await Course.find({}).populate('author')
+      const {page, all, filters: rawFilters} = req.query
+      const COURSES_ON_PAGE = 6
+
+      const pageFilters = rawFilters.split(',')
+
+      let filterParam = {category: {$in: pageFilters}}
+      if (pageFilters.length === 0 || pageFilters[0] === '') {
+        filterParam = {}
+      }
+
+      const courses = await Course.find(filterParam)
+        .populate('author')
+        .skip(Number(page - 1) * COURSES_ON_PAGE)
+        .limit(6)
+      const coursesCount = await Course.countDocuments(filterParam)
       return res.status(200).json({
+        coursesCount: coursesCount,
         courses: courses
       })
+
+
     } catch (error) {
       console.log(error)
       return res.status(500).json({message: 'Can not get courses'})
@@ -60,8 +77,7 @@ class CourseController {
       const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'author'}})
 
       return res.status(200).json({courses: user.courses})
-    }
-     catch (error) {
+    } catch (error) {
       console.log(error)
       return res.status(500).json({message: 'Error while getting user courses'})
     }

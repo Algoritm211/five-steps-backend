@@ -22,16 +22,37 @@ class ArticleController {
 
   async getAllArticles(req, res) {
     try {
-      const {page} = req.query
-      const articlesNumberOnPage = 6
+      const {page, ...filterObjFromClient} = req.query
+      const ARTICLES_ON_PAGE = 6
+      let arrFilter = []
 
-      const articles = await Article.find({})
-        .skip(Number(page - 1) * articlesNumberOnPage)
-        .limit(6)
+      for (let key in filterObjFromClient) {
+        if (filterObjFromClient.hasOwnProperty(key)) {
+          if (filterObjFromClient[key] === 'true') {
+            arrFilter.push(key)
+          }
+        }
+      }
+
+      let articles = []
+      let articlesCount = 0
+      if (page !== 'all') {
+        articles = await Article.find({category: {$in: arrFilter}})
+          .skip(Number(page - 1) * ARTICLES_ON_PAGE)
+          .limit(6)
+        articlesCount = await Article.countDocuments({category: {$in: arrFilter}})
+      } else {
+        articles = await Article.find({})
+          .skip(Number(page - 1) * ARTICLES_ON_PAGE)
+          .limit(6)
+        articlesCount = await Article.estimatedDocumentCount()
+      }
+
 
       return res.status(200).json({
         message: 'Articles was received',
-        articles: articles
+        articles: articles,
+        articlesCount: articlesCount
       })
 
     } catch (error) {
