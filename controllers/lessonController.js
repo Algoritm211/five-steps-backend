@@ -43,9 +43,14 @@ class LessonController {
 
   async getLesson(req, res) {
     try {
-      const {lessonId} = req.query
-      const lesson = await Lesson.findOne({_id: lessonId})
+      const {courseId, lessonNumber} = req.query
+      const course = await Course.findOne({_id: courseId})
+        .populate({path: 'lessons'})
+        .populate({path: 'author'})
+
+      const lesson = course.lessons[lessonNumber - 1]
       return res.status(200).json({
+        course: course,
         lesson: lesson
       })
     } catch (error) {
