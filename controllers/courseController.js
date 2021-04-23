@@ -15,7 +15,7 @@ class CourseController {
         rating: 0,
       })
       const user = await User.findOne({_id: req.user.id})
-      user.courses.push(course._id)
+      user.coursesAuthor.push(course._id)
 
       await course.save()
       await user.save()
@@ -62,7 +62,7 @@ class CourseController {
   async getCourse(req, res) {
     try {
       const {courseId} = req.query
-      const course = await Course.findOne({_id: courseId})
+      const course = await Course.findOne({_id: courseId}).populate('coursesAuthor')
       return res.status(200).json({
         course: course
       })
@@ -74,11 +74,30 @@ class CourseController {
 
   async getUserCourses(req, res) {
     try {
-      const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'author'}})
+      const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'coursesAuthor'}})
       return res.status(200).json({courses: user.courses})
     } catch (error) {
       console.log(error)
       return res.status(500).json({message: 'Error while getting user courses'})
+    }
+  }
+
+  async subscribeToCourse(req, res) {
+    try {
+      const {courseId} = req.query
+      const user = await User.findOne({_id: req.user.id})
+      const course = await Course.findOne({_id: courseId})
+      user.courses.push(course._id)
+      course.students.push(user._id)
+      await course.save()
+      await user.save()
+      return res.status(200).json({
+        user: user,
+        course: course
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Error while subscribing'})
     }
   }
 }

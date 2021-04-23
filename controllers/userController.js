@@ -6,6 +6,7 @@ const fs = require("fs");
 class UserController {
   async updateUser(req, res) {
     try {
+      // all fields in update updateObj must be named like User model fields
       const updateObj = req.body
       if (updateObj.password) {
         updateObj.password = await bcrypt.hash(updateObj.password, 8)
@@ -51,7 +52,7 @@ class UserController {
       const user = await User.findOne({_id: req.user.id})
       const filePath = path.join(req.staticPath, user.avatar)
       user.avatar = ''
-      user.save()
+      await user.save()
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath)

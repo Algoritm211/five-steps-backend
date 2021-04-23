@@ -45,14 +45,7 @@ class AuthController {
       const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
       return response.status(200).json({
         token: token,
-        user: {
-          lessonsCompleted: user.lessonsCompleted,
-          id: user._id,
-          email: user.email,
-          role: user.role,
-          name: user.name,
-          surname: user.surname,
-        }
+        user: user
       })
 
     } catch (error) {
@@ -73,14 +66,7 @@ class AuthController {
       const token = JWT.sign({id: user.id}, process.env.secretKey, {})
       return response.json({
         token: token,
-        user: {
-          lessonsCompleted: user.lessonsCompleted,
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          name: user.name,
-          surname: user.surname,
-        }
+        user: user
       })
 
     } catch (error) {
@@ -97,14 +83,7 @@ class AuthController {
 
         const userInfo = {
           token: token,
-          user: {
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            name: user.name,
-            surname: user.surname,
-            lessonsCompleted: user.lessonsCompleted,
-          }
+          user: user
         }
 
         res.send(
