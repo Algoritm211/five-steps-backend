@@ -100,6 +100,28 @@ class CourseController {
       return res.status(500).json({message: 'Error while subscribing'})
     }
   }
+
+  async unsubscribeCourse(req, res) {
+    try {
+      const {courseId} = req.query
+
+      const user = await User.findOne({_id: req.user.id})
+      const course = await Course.findOne({_id: courseId})
+
+      user.courses = user.courses.filter(id => id !== course._id)
+      course.students = course.students.filter(id => id !== user._id)
+
+      await course.save()
+      await user.save()
+      return res.status(200).json({
+        user: user,
+        course: course
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Can not unsubscribe course'})
+    }
+  }
 }
 
 

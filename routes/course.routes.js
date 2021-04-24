@@ -8,6 +8,7 @@ router.post('/create', authMiddleware, CourseController.createCourses)
 router.get('', CourseController.getAllCourses)
 router.get('/one', CourseController.getCourse)
 router.get('/subscribe', authMiddleware, CourseController.subscribeToCourse)
+router.delete('/subscribe', authMiddleware, CourseController.unsubscribeCourse)
 router.get('/user', authMiddleware, CourseController.getUserCourses)
 
 module.exports = router
