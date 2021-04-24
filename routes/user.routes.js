@@ -7,5 +7,6 @@ const router = new Router()
 router.patch('/update', authMiddleware, UserController.updateUser)
 router.post('/avatar', authMiddleware, UserController.uploadAvatar)
 router.delete('/avatar', authMiddleware, UserController.deleteAvatar)
+router.delete('', authMiddleware, UserController.deleteAccount)
 
 module.exports = router

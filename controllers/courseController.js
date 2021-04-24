@@ -74,7 +74,7 @@ class CourseController {
 
   async getUserCourses(req, res) {
     try {
-      const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'coursesAuthor'}})
+      const user = await User.findOne({_id: req.user.id}).populate({path: 'courses', populate: {path: 'author'}})
       return res.status(200).json({courses: user.courses})
     } catch (error) {
       console.log(error)

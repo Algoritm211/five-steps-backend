@@ -64,6 +64,23 @@ class UserController {
       return res.status(500).json({message: 'Error while deleting avatar'})
     }
   }
+
+  async deleteAccount(req, res) {
+    try {
+
+      const user = await User.findOne({_id: req.user.id})
+      const filePath = path.join(req.staticPath, user?.avatar || 'photo')
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
+      await user.remove()
+      return res.status(200).json({message: 'Deleted successfully'})
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: 'Can not delete account'})
+    }
+  }
 }
 
 module.exports = new UserController()

@@ -14,7 +14,7 @@ const courseRouter = require('./routes/course.routes')
 const userRouter = require('./routes/user.routes')
 const articleRouter = require('./routes/article.routes')
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000
 
 const app = express()
 
