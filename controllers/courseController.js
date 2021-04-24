@@ -105,14 +105,21 @@ class CourseController {
     try {
       const {courseId} = req.query
 
-      const user = await User.findOne({_id: req.user.id})
-      const course = await Course.findOne({_id: courseId})
+      // const user = await User.findOne({_id: req.user.id})
+      // const course = await Course.findOne({_id: courseId})
 
-      user.courses = user.courses.filter(id => id !== course._id)
-      course.students = course.students.filter(id => id !== user._id)
+      const course = await Course.findOneAndUpdate(
+        {_id: courseId},
+        {$pull: {students: req.user.id}},
+        {new: true}
+      )
 
-      await course.save()
-      await user.save()
+      const user = await User.findOneAndUpdate(
+        {_id: req.user.id},
+        {$pull: {courses: courseId}},
+        {new: true}
+      )
+
       return res.status(200).json({
         user: user,
         course: course
