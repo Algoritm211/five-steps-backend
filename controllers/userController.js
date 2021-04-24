@@ -30,9 +30,11 @@ class UserController {
       const newPhotoPath = path.join(req.staticPath, photoName)
 
       const user = await User.findOne({_id: req.user.id})
-      const oldPhotoPath = path.join(req.staticPath, user.avatar)
-      if (fs.existsSync(oldPhotoPath) && oldPhotoPath !== req.staticPath) {
-        fs.unlinkSync(oldPhotoPath)
+      if (user.avatar) {
+        const oldPhotoPath = path.join(req.staticPath, user.avatar)
+        if (fs.existsSync(oldPhotoPath) && oldPhotoPath !== req.staticPath) {
+          fs.unlinkSync(oldPhotoPath)
+        }
       }
       user.avatar = photoName
       await photo.mv(newPhotoPath)
