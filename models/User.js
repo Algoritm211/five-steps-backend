@@ -17,6 +17,7 @@ const User = new Schema({
   role: {type: String, default: 'student'},
   coursesAuthor: [{type: ObjectId, ref: 'Course'}],
   courses: [{type: ObjectId, ref: 'Course'}],
+  likedCourses: [{type: ObjectId, ref: 'Course'}],
   lessonsCompleted: [{type: ObjectId, ref: 'Lesson'}],
 })
 
