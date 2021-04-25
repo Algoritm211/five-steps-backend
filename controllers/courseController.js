@@ -136,7 +136,7 @@ class CourseController {
       const {courseId} = req.query
 
       const user = await User.findOne({_id: req.user.id})
-      const course = await Course.findOne({_id: courseId})
+      const course = await Course.findOne({_id: courseId}).populate('author')
       if (user.likedCourses && user.likedCourses.includes(courseId)) {
         course.rating = course.rating - 1
         user.likedCourses.remove(course._id)
