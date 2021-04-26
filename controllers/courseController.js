@@ -82,6 +82,19 @@ class CourseController {
     }
   }
 
+  async getCoursesFromAuthor(req, res) {
+    try {
+      const user = await User.findOne({_id: req.user.id}).populate('coursesAuthor')
+
+      return res.status(200).json({
+        coursesAuthor: user.coursesAuthor
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'Can not get author`s courses'})
+    }
+  }
+
   async subscribeToCourse(req, res) {
     try {
       const {courseId} = req.query

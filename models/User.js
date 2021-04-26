@@ -6,6 +6,7 @@ const User = new Schema({
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
   name: {type: String, required: true},
+  fromGoogleAuth: {type: Boolean},
   avatar: {type: String},
   city: {type: String},
   age: {type: Number},
