@@ -84,7 +84,7 @@ class CourseController {
 
   async getCoursesFromAuthor(req, res) {
     try {
-      const user = await User.findOne({_id: req.user.id}).populate('coursesAuthor').populate({path: 'courses', populate: {path: 'author'}})
+      const user = await User.findOne({_id: req.user.id}).populate({path: 'coursesAuthor', populate: {path: 'author'}})
 
       return res.status(200).json({
         coursesAuthor: user.coursesAuthor
