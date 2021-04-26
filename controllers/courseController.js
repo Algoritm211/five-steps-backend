@@ -1,5 +1,6 @@
 const Course = require('../models/Course')
 const User = require('../models/User')
+const Lesson = require('../models/Lesson')
 
 class CourseController {
 
@@ -13,7 +14,9 @@ class CourseController {
         category: category,
         description: description,
         rating: 0,
+        isReady: false
       })
+
       const user = await User.findOne({_id: req.user.id})
       user.coursesAuthor.push(course._id)
 
