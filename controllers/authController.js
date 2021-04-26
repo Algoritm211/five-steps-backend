@@ -12,7 +12,7 @@ class AuthController {
       const person = await User.findOne({email: email})
 
       if (person) {
-        return response.status(400).json({message: `This user with email ${email} already exist`})
+        return response.status(400).json({message: `Користувач з поштою ${email} вже існує`})
       }
 
       const hashPassword = await bcrypt.hash(password, 8)
