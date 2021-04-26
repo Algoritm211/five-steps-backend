@@ -33,13 +33,13 @@ class AuthController {
       const user = await User.findOne({email: email})
 
       if (!user) {
-        return response.status(400).json({message: 'User does not exist'})
+        return response.status(400).json({message: 'Такого користувача не існує'})
       }
 
       const isPasswordValid = await bcrypt.compare(password, user.password)
 
       if (!isPasswordValid) {
-        return response.status(400).json({message: 'Invalid password or login'})
+        return response.status(400).json({message: 'Неправильний логін або пароль'})
       }
 
       const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
