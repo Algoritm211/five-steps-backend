@@ -5,10 +5,10 @@ const Course = require('../models/Course')
 class LessonController {
   async createLesson(req, res) {
     try {
-      const {body, homeWork, courseId} = req.body
+      const {title, body, homeWork, courseId} = req.body
 
       const course = await Course.findOne({_id: courseId})
-      const lesson = new Lesson({body: body, homeWork: homeWork, course: courseId})
+      const lesson = new Lesson({title: title, body: body, homeWork: homeWork, course: courseId})
       course.lessons.push(lesson._id)
 
       await lesson.save()
@@ -25,11 +25,11 @@ class LessonController {
 
   async updateLesson(req, res) {
     try {
-      const {body, homeWork, lessonId} = req.body
+      const {title, body, homeWork, lessonId} = req.body
 
       const newLesson = await Lesson.findOneAndUpdate(
         {_id: lessonId},
-        {body: body, homeWork: homeWork},
+        {title: title, body: body, homeWork: homeWork},
         {new: true})
 
       return res.status(200).json({
