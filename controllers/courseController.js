@@ -33,6 +33,28 @@ class CourseController {
     }
   }
 
+  async deleteCourse(req, res) {
+    try {
+      const {courseId} = req.query
+      const course = await Course.findOne({_id: courseId})
+      const user = await User.findOneAndUpdate(
+        {_id: req.user.id},
+        {$pull: {coursesAuthor:courseId}},
+        {new: true}
+      )
+
+      await course.remove()
+      return res.status(200).json({
+        message: 'Course deleted successfully',
+        user: user,
+        course: course
+      })
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: 'Can not delete course'})
+    }
+  }
+
   async getAllCourses(req, res) {
     try {
       const {page, all, filters: rawFilters} = req.query
