@@ -65,9 +65,9 @@ class CourseController {
 
       const pageFilters = rawFilters.split(',')
 
-      let filterParam = {category: {$in: pageFilters}}
+      let filterParam = {category: {$in: pageFilters}, isReady: {$ne: false}}
       if (pageFilters.length === 0 || pageFilters[0] === '') {
-        filterParam = {}
+        filterParam = {isReady: {$ne: false}}
       }
 
       const courses = await Course.find(filterParam)
