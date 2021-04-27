@@ -37,9 +37,12 @@ class CourseController {
     try {
       const {courseId} = req.query
       const course = await Course.findOne({_id: courseId})
+
+      await Lesson.deleteMany({course: {_id: courseId}})
+
       const user = await User.findOneAndUpdate(
         {_id: req.user.id},
-        {$pull: {coursesAuthor:courseId}},
+        {$pull: {coursesAuthor: courseId}},
         {new: true}
       )
 
