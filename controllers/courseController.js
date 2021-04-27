@@ -17,9 +17,20 @@ class CourseController {
         isReady: false
       })
 
+      const lesson1 = new Lesson({title: '', body: '', homeWork: '', course: course._id})
+      const lesson2 = new Lesson({title: '', body: '', homeWork: '', course: course._id})
+      const lesson3 = new Lesson({title: '', body: '', homeWork: '', course: course._id})
+      const lesson4 = new Lesson({title: '', body: '', homeWork: '', course: course._id})
+      const lesson5 = new Lesson({title: '', body: '', homeWork: '', course: course._id})
+      course.lessons.push(lesson1._id, lesson2._id, lesson3._id, lesson4._id, lesson5._id)
       const user = await User.findOne({_id: req.user.id})
       user.coursesAuthor.push(course._id)
 
+      await lesson1.save()
+      await lesson2.save()
+      await lesson3.save()
+      await lesson4.save()
+      await lesson5.save()
       await course.save()
       await user.save()
 
