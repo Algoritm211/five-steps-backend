@@ -43,6 +43,9 @@ class AuthController {
       }
 
       const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
+      // response.cookie('authToken', token, {});
+      // console.log(request.session)
+      request.session.userId = token
       return response.status(200).json({
         token: token,
         user: user
@@ -57,19 +60,21 @@ class AuthController {
   async authorizationUser(request, response) {
 
     try {
-      const user = await User.findOne({_id: request.user.id})
 
+      const user = await User.findOne({_id: request.user.id})
       if (!user) {
         return response.status(401).json({message: 'This user was not found'})
       }
 
       const token = JWT.sign({id: user.id}, process.env.secretKey, {})
+      request.session.userId = token
       return response.json({
         token: token,
         user: user
       })
 
     } catch (error) {
+      console.log(error)
       response.send({message: "Server Error"})
     }
   }
