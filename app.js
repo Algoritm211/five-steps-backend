@@ -35,11 +35,6 @@ app.use('/', express.static( path.join(__dirname, 'static') ))
 app.use(fileUpload({}))
 app.use(staticMiddleware(path.resolve(__dirname, 'static')))
 
-app.use('/api/auth/', authRouter)
-app.use('/api/lesson/', lessonRouter)
-app.use('/api/course/', courseRouter)
-app.use('/api/user/', userRouter)
-app.use('/api/article/', articleRouter)
 
 const store = new MongoDBStore({
   uri: process.env.dbURL,
@@ -55,6 +50,12 @@ app.use(
     cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
   })
 );
+
+app.use('/api/auth/', authRouter)
+app.use('/api/lesson/', lessonRouter)
+app.use('/api/course/', courseRouter)
+app.use('/api/user/', userRouter)
+app.use('/api/article/', articleRouter)
 
 const START = async () => {
   try {
