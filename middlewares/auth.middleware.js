@@ -22,26 +22,6 @@ const JWT = require('jsonwebtoken')
 //   }
 // }
 
-// async function authMiddleware(req, res, next) {
-//
-//   if (req.method === "OPTIONS") {
-//     next()
-//   }
-//
-//   // check if client sent cookie
-//   let cookie = req.cookies.authToken;
-//   if (cookie === undefined) {
-//     return res.status(401).json({message: 'You are not authorized'})
-//   } else {
-//     const decodedUserId = await JWT.verify(cookie, process.env.secretKey)
-//     req.user = decodedUserId
-//     next()
-//   }
-// }
-//
-// module.exports = authMiddleware
-
-
 async function authMiddleware(req, res, next) {
 
   if (req.method === "OPTIONS") {
@@ -49,14 +29,32 @@ async function authMiddleware(req, res, next) {
   }
 
   // check if client sent cookie
-  let userJWT = req.session?.userId;
-  if (userJWT === undefined) {
+  let cookie = req.cookies.authToken;
+  if (cookie === undefined) {
     return res.status(401).json({message: 'You are not authorized'})
   } else {
-    const decodedUserId = await JWT.verify(userJWT, process.env.secretKey)
+    const decodedUserId = await JWT.verify(cookie, process.env.secretKey)
     req.user = decodedUserId
     next()
   }
 }
+
+
+// async function authMiddleware(req, res, next) {
+//
+//   if (req.method === "OPTIONS") {
+//     next()
+//   }
+//
+//   // check if client sent cookie
+//   let userJWT = req.session?.userId;
+//   if (userJWT === undefined) {
+//     return res.status(401).json({message: 'You are not authorized'})
+//   } else {
+//     const decodedUserId = await JWT.verify(userJWT, process.env.secretKey)
+//     req.user = decodedUserId
+//     next()
+//   }
+// }
 
 module.exports = authMiddleware

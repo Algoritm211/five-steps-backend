@@ -43,9 +43,9 @@ class AuthController {
       }
 
       const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
-      // response.cookie('authToken', token, {});
+      response.cookie('authToken', token, {});
       // console.log(request.session)
-      request.session.userId = token
+      // request.session.userId = token
       return response.status(200).json({
         token: token,
         user: user
@@ -67,7 +67,7 @@ class AuthController {
       }
 
       const token = JWT.sign({id: user.id}, process.env.secretKey, {})
-      request.session.userId = token
+      // request.session.userId = token
       return response.json({
         token: token,
         user: user

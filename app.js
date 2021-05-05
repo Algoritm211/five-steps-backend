@@ -7,6 +7,7 @@ const fs = require("fs");
 const fileUpload = require('express-fileupload')
 const path = require('path')
 const staticMiddleware = require('./middlewares/static.middleware')
+const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/auth.routes')
 const lessonRouter = require('./routes/lesson.routes')
@@ -14,8 +15,8 @@ const courseRouter = require('./routes/course.routes')
 const userRouter = require('./routes/user.routes')
 const articleRouter = require('./routes/article.routes')
 
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
+// const session = require("express-session");
+// const MongoDBStore = require("connect-mongodb-session")(session);
 
 const PORT = process.env.PORT || 5000
 
@@ -26,23 +27,23 @@ app.use(passport.initialize());
 app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
-  origin: ['http://localhost:3000', process.env.mainURL]
+  origin: ['http://localhost:3000', process.env.mainURL.toString()]
 }))
-
-const store = new MongoDBStore({
-  uri: process.env.dbURL,
-  collection: "sessions",
-});
-
-app.use(
-  session({
-    secret: process.env.secretKey,
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-    cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
-  })
-);
+app.use(cookieParser());
+// const store = new MongoDBStore({
+//   uri: process.env.dbURL,
+//   collection: "sessions",
+// });
+//
+// app.use(
+//   session({
+//     secret: process.env.secretKey,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: store,
+//     cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+//   })
+// );
 
 
 app.use(express.json())
