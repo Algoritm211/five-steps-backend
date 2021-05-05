@@ -29,13 +29,6 @@ app.use(cors({
   origin: ['http://localhost:3000', process.env.mainURL]
 }))
 
-app.use(express.json())
-
-app.use('/', express.static( path.join(__dirname, 'static') ))
-app.use(fileUpload({}))
-app.use(staticMiddleware(path.resolve(__dirname, 'static')))
-
-
 const store = new MongoDBStore({
   uri: process.env.dbURL,
   collection: "sessions",
@@ -50,6 +43,14 @@ app.use(
     cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
   })
 );
+
+
+app.use(express.json())
+
+app.use('/', express.static( path.join(__dirname, 'static') ))
+app.use(fileUpload({}))
+app.use(staticMiddleware(path.resolve(__dirname, 'static')))
+
 
 app.use('/api/auth/', authRouter)
 app.use('/api/lesson/', lessonRouter)
