@@ -22,37 +22,23 @@ class ArticleController {
 
   async getAllArticles(req, res) {
     try {
-      const {page, ...filterObjFromClient} = req.query
+      const {page, all, filters: rawFilters} = req.query
       const ARTICLES_ON_PAGE = 6
-      let arrFilter = []
 
-      for (let key in filterObjFromClient) {
-        if (filterObjFromClient.hasOwnProperty(key)) {
-          if (filterObjFromClient[key] === 'true') {
-            arrFilter.push(key)
-          }
-        }
+      const pageFilters = rawFilters.split(',')
+
+      let filterParam = {category: {$in: pageFilters}, isReady: {$ne: false}}
+      if (pageFilters.length === 0 || pageFilters[0] === '') {
+        filterParam = {isReady: {$ne: false}}
       }
 
-      let articles = []
-      let articlesCount = 0
-      if (page !== 'all') {
-        articles = await Article.find({category: {$in: arrFilter}})
-          .skip(Number(page - 1) * ARTICLES_ON_PAGE)
-          .limit(6)
-        articlesCount = await Article.countDocuments({category: {$in: arrFilter}})
-      } else {
-        articles = await Article.find({})
-          .skip(Number(page - 1) * ARTICLES_ON_PAGE)
-          .limit(6)
-        articlesCount = await Article.estimatedDocumentCount()
-      }
-
-
+      const articles = await Article.find(filterParam)
+        .skip(Number(page - 1) * ARTICLES_ON_PAGE)
+        .limit(6)
+      const articlesCount = await Article.countDocuments(filterParam)
       return res.status(200).json({
-        message: 'Articles was received',
-        articles: articles,
-        articlesCount: articlesCount
+        articlesCount: articlesCount,
+        articles: articles
       })
 
     } catch (error) {
@@ -60,7 +46,6 @@ class ArticleController {
       return res.status(500).json({message: 'Error while getting articles'})
     }
   }
-
 }
 
 

@@ -14,13 +14,21 @@ const courseRouter = require('./routes/course.routes')
 const userRouter = require('./routes/user.routes')
 const articleRouter = require('./routes/article.routes')
 
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
 const PORT = process.env.PORT || 5000
 
 const app = express()
 
 
 app.use(passport.initialize());
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: ['http://localhost:3000', process.env.mainURL]
+}))
+
 app.use(express.json())
 
 app.use('/', express.static( path.join(__dirname, 'static') ))
@@ -33,6 +41,20 @@ app.use('/api/course/', courseRouter)
 app.use('/api/user/', userRouter)
 app.use('/api/article/', articleRouter)
 
+const store = new MongoDBStore({
+  uri: process.env.dbURL,
+  collection: "sessions",
+});
+
+app.use(
+  session({
+    secret: process.env.secretKey,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+  })
+);
 
 const START = async () => {
   try {
