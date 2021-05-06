@@ -24,12 +24,14 @@ const app = express()
 
 
 app.use(passport.initialize());
+
 app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
   origin: ['http://localhost:3000', process.env.mainURL.toString()]
 }))
 app.use(cookieParser());
+
 // const store = new MongoDBStore({
 //   uri: process.env.dbURL,
 //   collection: "sessions",
@@ -41,7 +43,7 @@ app.use(cookieParser());
 //     resave: false,
 //     saveUninitialized: false,
 //     store: store,
-//     cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+//     cookie: { path: '/', httpOnly: false, secure: false, maxAge: null, sameSite: 'none'}
 //   })
 // );
 
