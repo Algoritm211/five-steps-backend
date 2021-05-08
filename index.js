@@ -28,7 +28,7 @@ app.use(passport.initialize());
 app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
-  origin: ['http://localhost:3000', 'https://next-frontend-five-steps.vercel.app']
+  origin: ['http://localhost:3000', 'https://next-frontend-five-steps.vercel.app', process.env.vercelFrontend]
 }))
 app.use(cookieParser());
 
