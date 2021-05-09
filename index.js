@@ -24,13 +24,14 @@ const app = express()
 
 
 app.use(passport.initialize());
+app.use(cookieParser());
+app.set('trust proxy', 1)
 
 app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
   origin: ['http://localhost:3000', 'https://next-frontend-five-steps.vercel.app', process.env.vercelFrontend]
 }))
-app.use(cookieParser());
 
 // const store = new MongoDBStore({
 //   uri: process.env.dbURL,

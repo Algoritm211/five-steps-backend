@@ -43,9 +43,11 @@ class AuthController {
       }
 
       const token = await JWT.sign({id: user._id}, process.env.secretKey, {})
-      response.cookie('authToken', token, {sameSite: false, secure: true, maxAge: 24 * 60 * 60 * 1000,});
-      // console.log(request.session)
-      // request.session.userId = token
+      // response.cookie('authToken', token, {secure: true, maxAge: 24 * 60 * 60 * 1000});
+      response.setHeader('Set-Cookie', [
+        `authToken=${token}; SameSite=None; path=/; Secure`,
+      ]);
+
       return response.status(200).json({
         token: token,
         user: user
