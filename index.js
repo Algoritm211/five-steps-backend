@@ -30,7 +30,7 @@ app.set('trust proxy', 1)
 app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
-  origin: ['http://localhost:3000', 'https://next-frontend-five-steps.vercel.app', process.env.vercelFrontend]
+  origin: ['http://localhost:3000', 'https://next-frontend-five-steps.vercel.app', process.env.vercelFrontend, 'https://1720e5b65695.ngrok.io']
 }))
 
 // const store = new MongoDBStore({
